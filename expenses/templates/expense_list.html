@@ -1,0 +1,90 @@
+<!-- expenses/templates/expenses/expense_list.html -->
+{% extends "base.html" %}
+{% block content %}
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h2>📊 Your Expenses</h2>
+    <a href="{% url 'expenses:create' %}" class="btn btn-primary">+ Add Expense</a>
+  </div>
+
+  <div class="filter">
+    <form method="get">
+      <label>
+        Category
+        <select name="category">
+          <option value="">All Categories</option>
+          {% for c in categories %}
+            <option value="{{ c }}" {% if request.GET.category == c %}selected{% endif %}>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      
+      <label>
+        From Date
+        <input type="date" name="start_date" value="{{ request.GET.start_date }}">
+      </label>
+      
+      <label>
+        To Date
+        <input type="date" name="end_date" value="{{ request.GET.end_date }}">
+      </label>
+      
+      <button type="submit" class="btn btn-primary" style="align-self: flex-end;">Apply Filter</button>
+      <a href="{% url 'expenses:list' %}" class="btn btn-secondary" style="align-self: flex-end;">Reset</a>
+    </form>
+  </div>
+
+  <div class="total">
+    💵 Total Expenses this month: ${{ month_total }}
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th style="text-align: center;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for expense in expenses %}
+        <tr>
+          <td>{{ expense.date|date:"M d, Y" }}</td>
+          <td><strong>{{ expense.title }}</strong></td>
+          <td><span style="background: #f0f3ff; padding: 4px 10px; border-radius: 12px; font-size: 13px;">{{ expense.category }}</span></td>
+          <td><strong style="color: #667eea;">${{ expense.amount }}</strong></td>
+          <td class="action-links" style="text-align: center;">
+            <a href="{% url 'expenses:edit' expense.pk %}">Edit</a>
+            <span style="color: #dee2e6;">|</span>
+            <a href="{% url 'expenses:delete' expense.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5" style="text-align: center; padding: 40px; color: #6c757d;">
+            <div style="font-size: 48px; margin-bottom: 12px;">📭</div>
+            <div style="font-size: 16px;">No expenses found.</div>
+            <a href="{% url 'expenses:create' %}" style="color: #667eea; margin-top: 8px; display: inline-block;">Add your first expense</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if is_paginated %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">← Previous</a>
+      {% endif %}
+      
+      <span style="color: #6c757d; font-weight: 500;">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </span>
+      
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.start_date %}&start_date={{ request.GET.start_date }}{% endif %}{% if request.GET.end_date %}&end_date={{ request.GET.end_date }}{% endif %}">Next →</a>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endblock %}

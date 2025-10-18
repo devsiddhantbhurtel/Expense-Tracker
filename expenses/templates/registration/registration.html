@@ -1,0 +1,45 @@
+<!-- expenses/templates/registration/register.html -->
+{% extends "base.html" %}
+{% block content %}
+  <div style="max-width: 500px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 32px;">
+      <div style="font-size: 48px; margin-bottom: 12px;">👤</div>
+      <h2>Create Your Account</h2>
+      <p style="color: #6c757d; margin-top: 8px;">Start tracking your expenses today</p>
+    </div>
+    
+    <form method="post">
+      {% csrf_token %}
+      
+      {% for field in form %}
+        <div class="field">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}
+            <small style="color: #6c757d; font-size: 13px; display: block; margin-top: 4px;">
+              {{ field.help_text }}
+            </small>
+          {% endif %}
+          {% if field.errors %}
+            <ul class="errorlist">
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+      
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
+        Register
+      </button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e9ecef;">
+      <p style="color: #6c757d;">
+        Already have an account? 
+        <a href="{% url 'login' %}" style="color: #667eea; text-decoration: none; font-weight: 500;">Login here</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

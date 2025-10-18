@@ -1,0 +1,70 @@
+<!-- expenses/templates/expenses/expense_form.html -->
+{% extends "base.html" %}
+{% block content %}
+  <h2>{% if object %}✏️ Edit Expense{% else %}➕ Add New Expense{% endif %}</h2>
+  
+  <form method="post" style="max-width: 600px;">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+      <div class="errorlist">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+    
+    <div class="field">
+      {{ form.title.label_tag }}
+      {{ form.title }}
+      {% if form.title.errors %}
+        <ul class="errorlist">
+          {% for error in form.title.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    
+    <div class="field">
+      {{ form.amount.label_tag }}
+      {{ form.amount }}
+      {% if form.amount.errors %}
+        <ul class="errorlist">
+          {% for error in form.amount.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    
+    <div class="field">
+      {{ form.category.label_tag }}
+      {{ form.category }}
+      {% if form.category.errors %}
+        <ul class="errorlist">
+          {% for error in form.category.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    
+    <div class="field">
+      {{ form.date.label_tag }}
+      {{ form.date }}
+      {% if form.date.errors %}
+        <ul class="errorlist">
+          {% for error in form.date.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    
+    <div style="display: flex; gap: 12px; margin-top: 24px;">
+      <button type="submit" class="btn btn-primary">
+        {% if object %}Update Expense{% else %}Save Expense{% endif %}
+      </button>
+      <a href="{% url 'expenses:list' %}" class="btn btn-link">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

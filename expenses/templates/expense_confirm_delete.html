@@ -1,0 +1,32 @@
+<!-- expenses/templates/expenses/expense_confirm_delete.html -->
+{% extends "base.html" %}
+{% block content %}
+  <div style="max-width: 500px; margin: 0 auto; text-align: center;">
+    <div style="font-size: 64px; margin-bottom: 20px;">⚠️</div>
+    
+    <h2 style="margin-bottom: 16px;">Delete Expense</h2>
+    
+    <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 20px; border-radius: 8px; margin-bottom: 24px;">
+      <p style="color: #856404; margin-bottom: 12px;">
+        Are you sure you want to delete this expense?
+      </p>
+      <div style="background: white; padding: 16px; border-radius: 6px; margin-top: 12px;">
+        <div style="font-weight: 600; color: #333; margin-bottom: 4px;">{{ object.title }}</div>
+        <div style="color: #667eea; font-size: 20px; font-weight: 700;">${{ object.amount }}</div>
+        <div style="color: #6c757d; font-size: 14px; margin-top: 4px;">{{ object.category }} • {{ object.date|date:"M d, Y" }}</div>
+      </div>
+    </div>
+    
+    <p style="color: #6c757d; margin-bottom: 24px; font-size: 14px;">
+      This action cannot be undone.
+    </p>
+    
+    <form method="post">
+      {% csrf_token %}
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'expenses:list' %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}
